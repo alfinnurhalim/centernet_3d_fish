@@ -461,6 +461,28 @@ def ddd_decode(heat, rot, depth, dim, wh=None, reg=None, K=40):
       
     return detections
 
+def fish_decode(heat,reg, K=40):
+    batch, cat, height, width = heat.size()
+    heat = _nms(heat)
+      
+    scores, inds, clses, ys, xs = _topk(heat, K=K)
+
+    reg = _transpose_and_gather_feat(reg, inds)
+    reg = reg.view(batch, K, 2)
+
+    clses  = clses.view(batch, K, 1).float()
+    scores = scores.view(batch, K, 1)
+
+    xs = xs.view(batch, K, 1) + reg[:, :, 0:1]
+    ys = ys.view(batch, K, 1) + reg[:, :, 1:2]
+
+    detections = {'cx':xs,
+                'cy'    : ys,
+                'conf'  : scores,
+                'class' : clses}
+
+    return detections
+
 def ctdet_decode(heat, wh, reg=None, cat_spec_wh=False, K=100):
     batch, cat, height, width = heat.size()
 

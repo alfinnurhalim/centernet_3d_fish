@@ -328,6 +328,12 @@ class opts(object):
         opt.heads.update({'hm_hp': 17})
       if opt.reg_hp_offset:
         opt.heads.update({'hp_offset': 2})
+
+    elif opt.task == 'fish':
+      # assert opt.dataset in ['gta', 'kitti', 'viper']
+      # {'hm': opt.num_classes, 'dep': 1, 'rot': 2, 'dim': 3,'reg': 2}
+      opt.heads = {'hm': opt.num_classes,'reg': 2}
+
     else:
       assert 0, 'task not defined!'
     print('heads', opt.heads)
@@ -350,6 +356,9 @@ class opts(object):
       'ddd': {'default_resolution': [384, 1280], 'num_classes': 3, 
                 'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225],
                 'dataset': 'kitti'},
+      'fish': {'default_resolution': [512, 512], 'num_classes': 1, 
+                'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225],
+                'dataset': 'fish_sim'},
     }
     class Struct:
       def __init__(self, entries):
