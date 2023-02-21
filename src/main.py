@@ -15,6 +15,7 @@ from logger import Logger
 from datasets.dataset_factory import get_dataset
 from trains.train_factory import train_factory
 
+import wandb
 
 def main(opt):
   torch.manual_seed(opt.seed)
@@ -69,6 +70,8 @@ def main(opt):
     mark = epoch if opt.save_all else 'last'
     log_dict_train, _ = trainer.train(epoch, train_loader)
     logger.write('epoch: {} |'.format(epoch))
+    wandb.log(log_dict_train)
+
     for k, v in log_dict_train.items():
       logger.scalar_summary('train_{}'.format(k), v, epoch)
       logger.write('{} {:8f} | '.format(k, v))
@@ -98,5 +101,6 @@ def main(opt):
   logger.close()
 
 if __name__ == '__main__':
+  wandb.init(project="CenterNet_3d_fish",entity='alfin-nurhalim')
   opt = opts().parse()
   main(opt)
