@@ -56,7 +56,7 @@ def main(opt):
     return
 
   train_loader = torch.utils.data.DataLoader(
-      Dataset(opt, 'train'), 
+      Dataset(opt, 'val'), 
       batch_size=opt.batch_size, 
       shuffle=True,
       num_workers=opt.num_workers,
@@ -70,7 +70,8 @@ def main(opt):
     mark = epoch if opt.save_all else 'last'
     log_dict_train, _ = trainer.train(epoch, train_loader)
     logger.write('epoch: {} |'.format(epoch))
-    wandb.log(log_dict_train)
+    if use_wandb:
+      wandb.log(log_dict_train)
 
     for k, v in log_dict_train.items():
       logger.scalar_summary('train_{}'.format(k), v, epoch)
@@ -101,6 +102,9 @@ def main(opt):
   logger.close()
 
 if __name__ == '__main__':
-  wandb.init(project="CenterNet_3d_fish",entity='alfin-nurhalim')
+  use_wandb = False
+
+  if use_wandb:
+    wandb.init(project="CenterNet_3d_fish",entity='alfin-nurhalim')
   opt = opts().parse()
   main(opt)
