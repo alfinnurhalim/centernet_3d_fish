@@ -36,7 +36,7 @@ class FishDataset(data.Dataset):
 
     dep = np.zeros((self.max_objs, 1), dtype=np.float32)
     dim = np.zeros((self.max_objs, 3), dtype=np.float32)
-    rot = np.zeros((self.max_objs, 2), dtype=np.float32)
+    rot = np.zeros((self.max_objs, 4), dtype=np.float32)
 
     reg_mask = np.zeros((self.max_objs), dtype=np.uint8)
     ind = np.zeros((self.max_objs), dtype=np.int64)
@@ -79,12 +79,12 @@ class FishDataset(data.Dataset):
         ind[k] = ct_int[1] * self.opt.output_w + ct_int[0]
 
         angle_max = (2*np.pi)
-        alphaX = np.degrees(((ann['alphax'] + angle_max) % angle_max))
-        alphaY = np.degrees(((ann['alphay'] + angle_max) % angle_max))
+        alphaX = ((ann['alphax'] + angle_max) % angle_max)
+        alphaY = ((ann['alphay'] + angle_max) % angle_max)
 
         dep[k] = ann['depth']
         dim[k] = ann['dim']
-        rot[k] = [alphaX,alphaY]
+        rot[k] = [np.sin(alphaX),np.cos(alphaX),np.sin(alphaY),np.cos(alphaY)]
 
       ret = {'input': img, 
             'hm': hm,
