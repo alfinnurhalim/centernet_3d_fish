@@ -102,7 +102,7 @@ def main(opt):
   logger.close()
 
 if __name__ == '__main__':
-  use_wandb = False
+  use_wandb = True
 
   if use_wandb:
     wandb.init(project="CenterNet_3d_fish",entity='alfin-nurhalim')
