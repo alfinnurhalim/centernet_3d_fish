@@ -79,8 +79,8 @@ class FishDataset(data.Dataset):
         ind[k] = ct_int[1] * self.opt.output_w + ct_int[0]
 
         angle_max = (2*np.pi)
-        alphaX = np.degrees(((ann['alphax'] + angle_max) % angle_max))
-        alphaY = np.degrees(((ann['alphay'] + angle_max) % angle_max))
+        alphaX = (((ann['alphax'] + angle_max) % angle_max))
+        alphaY = (((ann['alphay'] + angle_max) % angle_max))
 
         dep[k] = ann['depth']
         dim[k] = ann['dim']
