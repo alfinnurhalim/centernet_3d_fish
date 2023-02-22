@@ -24,7 +24,7 @@ class FishLoss(torch.nn.Module):
     loss = 0
     output = outputs[0]
     output['hm'] = _sigmoid(output['hm'])
-    # output['dep'] = 1. / (output['dep'].sigmoid() + 1e-6) - 1.
+    output['dep'] = 1. / (output['dep'].sigmoid() + 1e-6) - 1.
 
     hm_loss = self.crit(output['hm'], batch['hm'])
     off_loss = self.crit_reg(output['reg'], batch['reg_mask'],
