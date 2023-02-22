@@ -184,6 +184,17 @@ class L1Loss(nn.Module):
     loss = F.l1_loss(pred * mask, target * mask, reduction='elementwise_mean')
     return loss
 
+class MSELoss(nn.Module):
+  def __init__(self):
+    super(MSELoss, self).__init__()
+  
+  def forward(self, output, mask, ind, target):
+    pred = _transpose_and_gather_feat(output, ind)
+    mask = mask.unsqueeze(2).expand_as(pred).float()
+    loss = F.mse_loss(pred * mask, target * mask, reduction='elementwise_mean')
+    return loss
+
+
 class BinRotLoss(nn.Module):
   def __init__(self):
     super(BinRotLoss, self).__init__()
