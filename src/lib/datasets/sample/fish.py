@@ -34,6 +34,10 @@ class FishDataset(data.Dataset):
     hm = np.zeros((self.opt.num_classes, self.opt.output_h, self.opt.output_w), dtype=np.float32)
     reg = np.zeros((self.max_objs, 2), dtype=np.float32)
 
+    dep = np.zeros((self.max_objs, 1), dtype=np.float32)
+    dim = np.zeros((self.max_objs, 3), dtype=np.float32)
+    rot = np.zeros((self.max_objs, 2), dtype=np.float32)
+
     reg_mask = np.zeros((self.max_objs), dtype=np.uint8)
     ind = np.zeros((self.max_objs), dtype=np.int64)
     # ===========shape============
@@ -42,6 +46,7 @@ class FishDataset(data.Dataset):
     img = cv2.imread(img_path)
     img = self._preprocess_input(img)
     
+    cts = []
     for k in range(len(boxes)):
       ann = img_annos[k]
 
@@ -49,6 +54,7 @@ class FishDataset(data.Dataset):
 
       cls_id = int(self.cat_ids[1])
 
+      
       h, w = bbox[3] - bbox[1], bbox[2] - bbox[0]
 
       # only taking hm where h and w >0
@@ -60,22 +66,34 @@ class FishDataset(data.Dataset):
         ct = np.array(
           [cx_3d,cy_3d], dtype=np.float32)/self.opt.down_ratio
         ct_int = ct.astype(np.int32)
-        
+
+        cts.append(ct_int)
         radius = gaussian_radius((h, w))
-        radius = max(0, int(radius))
+        radius = max(1, int(radius))
         
-        draw_msra_gaussian(hm[cls_id], ct, radius)
+        draw_msra_gaussian(hm[0], ct, radius)
 
         reg[k] = ct - ct_int
         reg_mask[k] = 1
 
         ind[k] = ct_int[1] * self.opt.output_w + ct_int[0]
 
+        angle_max = (2*np.pi)
+        alphaX = np.degrees(((ann['alphax'] + angle_max) % angle_max))
+        alphaY = np.degrees(((ann['alphay'] + angle_max) % angle_max))
+
+        dep[k] = ann['depth']
+        dim[k] = ann['dim']
+        rot[k] = [alphaX,alphaY]
+
       ret = {'input': img, 
             'hm': hm,
             'reg' : reg,
             'reg_mask': reg_mask,
             'ind': ind,
+            'dep': dep, 
+            'dim': dim, 
+            'rot':rot,
             }
         
     return ret

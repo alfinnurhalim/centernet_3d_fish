@@ -62,6 +62,11 @@ class Debugger(object):
       self.focal_length = 721.5377
       self.W = 1242
       self.H = 375
+    elif dataset == 'fish_sim':
+      self.names = fish_class_name
+      self.focal_length = 721.5377
+      self.W = 512
+      self.H = 512
     num_classes = len(self.names)
     self.down_ratio=down_ratio
     # for bird view
@@ -430,6 +435,10 @@ class Debugger(object):
 
 kitti_class_name = [
   'p', 'v', 'b'
+]
+
+fish_class_name = [
+  'fish'
 ]
 
 gta_class_name = [

@@ -476,12 +476,21 @@ def fish_decode(heat,reg, K=40):
     xs = xs.view(batch, K, 1) + reg[:, :, 0:1]
     ys = ys.view(batch, K, 1) + reg[:, :, 1:2]
 
-    detections = {'cx':xs,
-                'cy'    : ys,
-                'conf'  : scores,
-                'class' : clses}
+    dets = {'cx':xs.detach().cpu().numpy()[0],
+                'cy'    : ys.detach().cpu().numpy()[0],
+                'conf'  : scores.detach().cpu().numpy()[0],
+                'class' : clses.detach().cpu().numpy()[0]}
 
-    return detections
+    # convert it to list of dict
+    keys = list(dets.keys())
+    res = []
+    for i in range(len(dets[keys[0]])):
+        dict_val = {}
+        for key in keys:
+            dict_val[key] = dets[key][i][0]
+        res.append(dict_val)
+
+    return res
 
 def ctdet_decode(heat, wh, reg=None, cat_spec_wh=False, K=100):
     batch, cat, height, width = heat.size()

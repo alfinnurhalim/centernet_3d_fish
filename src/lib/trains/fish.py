@@ -21,22 +21,34 @@ class FishLoss(torch.nn.Module):
     opt = self.opt
 
     loss = 0
-    hm_loss = 0
-    off_loss = 0
-
     output = outputs[0]
     output['hm'] = _sigmoid(output['hm'])
-    
+    output['dep'] = 1. / (output['dep'].sigmoid() + 1e-6) - 1.
+
     hm_loss = self.crit(output['hm'], batch['hm'])
     off_loss = self.crit_reg(output['reg'], batch['reg_mask'],
                             batch['ind'], batch['reg'])
 
+    dep_loss = self.crit_reg(output['dep'], batch['reg_mask'],
+                              batch['ind'], batch['dep'])
+    dim_loss = self.crit_reg(output['dim'], batch['reg_mask'],
+                              batch['ind'], batch['dim'])
+    rot_loss = self.crit_reg(output['rot'], batch['reg_mask'],
+                              batch['ind'], batch['rot'])
+
     loss = loss + hm_loss
     loss = loss + off_loss
+
+    loss = loss + dep_loss
+    loss = loss + dim_loss
+    loss = loss + rot_loss
 
     loss_stats = {'loss': loss,
                   'hm_loss': hm_loss,
                   'off_loss': off_loss,
+                  'dep_loss': dep_loss, 
+                  'dim_loss': dim_loss,
+                  'rot_loss': rot_loss, 
                  }
 
     return loss, loss_stats
@@ -48,7 +60,11 @@ class FishTrainer(BaseTrainer):
   def _get_losses(self, opt):
     loss_states = ['loss', 
                   'hm_loss', 
-                  'off_loss']
+                  'off_loss',
+                  'dep_loss',
+                  'dim_loss',
+                  'rot_loss']
+
     loss = FishLoss(opt)
     return loss_states, loss
 
