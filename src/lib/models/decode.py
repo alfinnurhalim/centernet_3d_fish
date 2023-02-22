@@ -501,7 +501,7 @@ def fish_decode(heat,reg,depth,dim,rot,K=40):
     for i in range(len(dets[keys[0]])):
         dict_val = {}
         for key in keys:
-            dict_val[key] = dets[key][i][0]
+            dict_val[key] = dets[key][i]
         res.append(dict_val)
 
     return res
