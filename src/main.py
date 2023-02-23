@@ -24,6 +24,9 @@ def main(opt):
   opt = opts().update_dataset_info_and_set_heads(opt, Dataset)
   print(opt)
 
+  if opt.wandb:
+    wandb.init(project="CenterNet_3d_fish",entity='alfin-nurhalim')
+
   logger = Logger(opt)
 
   os.environ['CUDA_VISIBLE_DEVICES'] = opt.gpus_str
@@ -102,7 +105,7 @@ def main(opt):
     mark = epoch if opt.save_all else 'last'
     log_dict_train, _ = trainer.train(epoch, train_loader)
     logger.write('epoch: {} |'.format(epoch))
-    if use_wandb:
+    if opt.wandb:
       wandb.log(log_dict_train)
 
     for k, v in log_dict_train.items():
@@ -134,9 +137,6 @@ def main(opt):
   logger.close()
 
 if __name__ == '__main__':
-  use_wandb = False
-
-  if use_wandb:
-    wandb.init(project="CenterNet_3d_fish",entity='alfin-nurhalim')
   opt = opts().parse()
   main(opt)
+  
