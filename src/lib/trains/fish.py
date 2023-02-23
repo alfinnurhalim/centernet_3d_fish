@@ -38,12 +38,12 @@ class FishLoss(torch.nn.Module):
     rot_loss = self.crit_reg(output['rot'], batch['reg_mask'],
                               batch['ind'], batch['rot'])
 
-    loss = loss + hm_loss
-    loss = loss + off_loss
+    # loss = loss + hm_loss
+    # loss = loss + off_loss
 
-    loss = loss + dep_loss
-    loss = loss + dim_loss
-    # loss = loss + rot_loss
+    # loss = loss + dep_loss
+    # loss = loss + dim_loss
+    loss = loss + rot_loss
 
     loss_stats = {'loss': loss,
                   'hm_loss': hm_loss,
