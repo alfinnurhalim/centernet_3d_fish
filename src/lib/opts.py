@@ -80,6 +80,8 @@ class opts(object):
                              help='input width. -1 for default from dataset.')
     
     # train
+    self.parser.add_argument('--wandb', action='store_true',
+                             help='use wandb')
     self.parser.add_argument('--optim', default='adam',
                              help='adam | sgd')
     self.parser.add_argument('--lr', type=float, default=1.25e-4, 
