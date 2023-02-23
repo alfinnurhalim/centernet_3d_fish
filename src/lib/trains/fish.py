@@ -41,8 +41,8 @@ class FishLoss(torch.nn.Module):
     loss = loss + hm_loss
     loss = loss + off_loss
 
-    # loss = loss + dep_loss
-    # loss = loss + dim_loss
+    loss = loss + dep_loss
+    loss = loss + dim_loss
     # loss = loss + rot_loss
 
     loss_stats = {'loss': loss,
