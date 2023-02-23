@@ -31,7 +31,39 @@ def main(opt):
   
   print('Creating model...')
   model = create_model(opt.arch, opt.heads, opt.head_conv)
-  optimizer = torch.optim.Adam(model.parameters(), opt.lr)
+
+  # ==================  FREEZING MODEL ==================================
+  print('Freezing layer')
+  model_layers = {
+    'base' : [model.base,True],
+    'dla_up' : [model.dla_up,True],
+    'ida_up' : [model.ida_up,True],
+
+    'hm' : [model.hm,True],
+    'reg' : [model.reg,True],
+
+    'dep' : [model.dep,False],
+    'dim' : [model.dim,False],
+    'rot' : [model.rot,False],
+  }
+
+  for key in model_layers.keys():
+    for name,param in model_layers[key][0].named_parameters():
+      param.requires_grad = model_layers[key][1]
+      print(key,name,param.requires_grad)
+    print('')
+  # ==================  OPTIM INFO ==================================
+  optim = 'sgd'
+
+  optimizers = {
+    'adam' : torch.optim.Adam(model.parameters(), lr=opt.lr),
+    'sgd' : torch.optim.SGD(model.parameters(), lr=opt.lr, momentum=0.9)
+  }
+  optimizer = optimizers[optim]
+  print('Using',optim,'oprimizers')
+
+  # =================================================================
+
   start_epoch = 0
   if opt.load_model != '':
     model, optimizer, start_epoch = load_model(
@@ -102,7 +134,7 @@ def main(opt):
   logger.close()
 
 if __name__ == '__main__':
-  use_wandb = True
+  use_wandb = False
 
   if use_wandb:
     wandb.init(project="CenterNet_3d_fish",entity='alfin-nurhalim')

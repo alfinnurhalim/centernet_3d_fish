@@ -483,7 +483,7 @@ def fish_decode(heat,reg,depth,dim,rot,K=40):
     dim = dim.view(batch, K, 3)
 
     rot = _transpose_and_gather_feat(rot, inds)
-    rot = rot.view(batch, K, 4)
+    rot = rot.view(batch, K, 2)
 
     dets = {'cx':xs.detach().cpu().numpy()[0],
             'cy'    : ys.detach().cpu().numpy()[0],
