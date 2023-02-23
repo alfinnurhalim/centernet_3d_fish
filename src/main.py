@@ -53,7 +53,7 @@ def main(opt):
       print(key,name,param.requires_grad)
     print('')
   # ==================  OPTIM INFO ==================================
-  optim = 'sgd'
+  optim =opt.optim
 
   optimizers = {
     'adam' : torch.optim.Adam(model.parameters(), lr=opt.lr),

@@ -80,6 +80,8 @@ class opts(object):
                              help='input width. -1 for default from dataset.')
     
     # train
+    self.parser.add_argument('--optim', default='adam',
+                             help='adam | sgd')
     self.parser.add_argument('--lr', type=float, default=1.25e-4, 
                              help='learning rate for batch size 32.')
     self.parser.add_argument('--lr_step', type=str, default='90,120',
