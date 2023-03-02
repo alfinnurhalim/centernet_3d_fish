@@ -47,7 +47,7 @@ def main(opt):
 
     'dep' : [model.dep,True],
     'dim' : [model.dim,True],
-    'rot' : [model.rot,True],
+    'rot' : [model.rot,False],
   }
 
   for key in model_layers.keys():
