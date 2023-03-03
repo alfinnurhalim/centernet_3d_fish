@@ -15,6 +15,8 @@ from utils.image import get_affine_transform, affine_transform
 from utils.image import gaussian_radius, draw_umich_gaussian, draw_msra_gaussian
 import pycocotools.coco as coco
 
+from scipy.spatial.transform import Rotation
+
 class FishDataset(data.Dataset):
   def _coco_box_to_bbox(self, box):
     bbox = np.array([box[0], box[1], box[0] + box[2], box[1] + box[3]],
@@ -36,7 +38,7 @@ class FishDataset(data.Dataset):
 
     dep = np.zeros((self.max_objs, 1), dtype=np.float32)
     dim = np.zeros((self.max_objs, 3), dtype=np.float32)
-    rot = np.zeros((self.max_objs, 2), dtype=np.float32)
+    rot = np.zeros((self.max_objs, 4), dtype=np.float32)
 
     reg_mask = np.zeros((self.max_objs), dtype=np.uint8)
     ind = np.zeros((self.max_objs), dtype=np.int64)
@@ -82,9 +84,12 @@ class FishDataset(data.Dataset):
         alphaX = np.degrees((ann['alphax'] + angle_max) % angle_max)
         alphaY = np.degrees((ann['alphay'] + angle_max) % angle_max)
 
+        angle = Rotation.from_euler('xyz', [alphaX, alphaY, 0], degrees=True)
+        angle = angle.as_quat()
+        
         dep[k] = ann['depth']
         dim[k] = ann['dim']
-        rot[k] = [alphaX,alphaY]
+        rot[k] = angle
         # rot[k] = [np.sin(alphaX),np.cos(alphaX),np.sin(alphaY),np.cos(alphaY)]
 
       ret = {'input': img, 

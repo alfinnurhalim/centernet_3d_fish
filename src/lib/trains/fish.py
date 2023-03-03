@@ -37,9 +37,8 @@ class FishLoss(torch.nn.Module):
     
     rot_loss = self.crit_reg(output['rot'], batch['reg_mask'],
                               batch['ind'], batch['rot']) 
-
-    rot_loss = rot_loss * 0.0
-
+    
+    # rot_loss = rot_loss * 0.01
 
     loss = loss + hm_loss
     loss = loss + off_loss
