@@ -45,9 +45,11 @@ def main(opt):
     'hm' : [model.hm,True],
     'reg' : [model.reg,True],
 
-    'dep' : [model.dep,True],
-    'dim' : [model.dim,True],
-    'rot' : [model.rot,True],
+    'dep' : [model.dep,False],
+    'dim' : [model.dim,False],
+    'rot' : [model.rot,False],
+
+    'wh' : [model.wh,True],
   }
 
   for key in model_layers.keys():

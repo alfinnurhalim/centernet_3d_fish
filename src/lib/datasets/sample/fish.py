@@ -40,6 +40,8 @@ class FishDataset(data.Dataset):
     dim = np.zeros((self.max_objs, 3), dtype=np.float32)
     rot = np.zeros((self.max_objs, 4), dtype=np.float32)
 
+    wh = np.zeros((self.max_objs, 2), dtype=np.float32)
+
     reg_mask = np.zeros((self.max_objs), dtype=np.uint8)
     ind = np.zeros((self.max_objs), dtype=np.int64)
     # ===========shape============
@@ -56,7 +58,6 @@ class FishDataset(data.Dataset):
 
       cls_id = int(self.cat_ids[1])
 
-      
       h, w = bbox[3] - bbox[1], bbox[2] - bbox[0]
 
       # only taking hm where h and w >0
@@ -65,8 +66,12 @@ class FishDataset(data.Dataset):
         # HEATMAP AND CENTER
         cx_3d = ann['cx']
         cy_3d = ann['cy']
+
+        cx_2d = bbox[0] + w/2
+        cy_2d = bbox[1] + h/2
+
         ct = np.array(
-          [cx_3d,cy_3d], dtype=np.float32)/self.opt.down_ratio
+          [cx_2d,cy_2d], dtype=np.float32)/self.opt.down_ratio
         ct_int = ct.astype(np.int32)
 
         cts.append(ct_int)
@@ -74,11 +79,6 @@ class FishDataset(data.Dataset):
         radius = max(1, int(radius))
         
         draw_msra_gaussian(hm[0], ct, radius)
-
-        reg[k] = ct - ct_int
-        reg_mask[k] = 1
-
-        ind[k] = ct_int[1] * self.opt.output_w + ct_int[0]
 
         angle_max = (2*np.pi)
         alphaX = np.degrees((ann['alphax'] + angle_max) % angle_max)
@@ -92,6 +92,13 @@ class FishDataset(data.Dataset):
         rot[k] = angle
         # rot[k] = [np.sin(alphaX),np.cos(alphaX),np.sin(alphaY),np.cos(alphaY)]
 
+        wh[k] = [w,h]
+
+        ind[k] = ct_int[1] * self.opt.output_w + ct_int[0]
+        reg[k] = ct - ct_int
+
+        reg_mask[k] = 1
+
       ret = {'input': img, 
             'hm': hm,
             'reg' : reg,
@@ -100,6 +107,7 @@ class FishDataset(data.Dataset):
             'dep': dep, 
             'dim': dim, 
             'rot':rot,
+            'wh' :wh,
             }
         
     return ret
