@@ -63,7 +63,7 @@ class FishDataset(data.Dataset):
       # only taking hm where h and w >0
       if h > 0 and w > 0:
 
-        # HEATMAP AND CENTER
+        # HEATMAP AND CENTER  
         cx_3d = ann['cx']
         cy_3d = ann['cy']
 
@@ -71,7 +71,7 @@ class FishDataset(data.Dataset):
         cy_2d = bbox[1] + h/2
 
         ct = np.array(
-          [cx_2d,cy_2d], dtype=np.float32)/self.opt.down_ratio
+          [cx_2d,cy_2d], dtype=np.float32)
         ct_int = ct.astype(np.int32)
 
         cts.append(ct_int)
@@ -92,7 +92,7 @@ class FishDataset(data.Dataset):
         rot[k] = angle
         # rot[k] = [np.sin(alphaX),np.cos(alphaX),np.sin(alphaY),np.cos(alphaY)]
 
-        wh[k] = [w,h]
+        wh[k] = [w*self.opt.down_ratio,h*self.opt.down_ratio]
 
         ind[k] = ct_int[1] * self.opt.output_w + ct_int[0]
         reg[k] = ct - ct_int

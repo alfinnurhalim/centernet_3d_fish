@@ -461,7 +461,7 @@ def ddd_decode(heat, rot, depth, dim, wh=None, reg=None, K=40):
       
     return detections
 
-def fish_decode(heat,reg,depth,dim,rot,K=40):
+def fish_decode(heat,reg,depth,dim,rot,wh,K=40):
     batch, cat, height, width = heat.size()
     heat = _nms(heat)
       
@@ -485,14 +485,20 @@ def fish_decode(heat,reg,depth,dim,rot,K=40):
     rot = _transpose_and_gather_feat(rot, inds)
     rot = rot.view(batch, K, 4)
 
+    wh = _transpose_and_gather_feat(wh, inds)
+    wh = wh.view(batch, K, 2)
+
     dets = {'cx':xs.detach().cpu().numpy()[0],
             'cy'    : ys.detach().cpu().numpy()[0],
             'conf'  : scores.detach().cpu().numpy()[0],
             'class' : clses.detach().cpu().numpy()[0],
 
-            'dep'    : depth.detach().cpu().numpy()[0],
-            'dim'  : dim.detach().cpu().numpy()[0],
-            'rot' : rot.detach().cpu().numpy()[0]}
+            'dep'   : depth.detach().cpu().numpy()[0],
+            'dim'   : dim.detach().cpu().numpy()[0],
+            'rot'   : rot.detach().cpu().numpy()[0],
+
+            'wh'   : wh.detach().cpu().numpy()[0],
+            }
 
 
     # convert it to list of dict
