@@ -92,7 +92,7 @@ class FishDataset(data.Dataset):
         rot[k] = angle
         # rot[k] = [np.sin(alphaX),np.cos(alphaX),np.sin(alphaY),np.cos(alphaY)]
 
-        wh[k] = [w*self.opt.down_ratio,h*self.opt.down_ratio]
+        wh[k] = [w,h]
 
         ind[k] = ct_int[1] * self.opt.output_w + ct_int[0]
         reg[k] = ct - ct_int
