@@ -99,16 +99,16 @@ class FishDataset(data.Dataset):
 
         reg_mask[k] = 1
 
-      ret = {'input': img, 
-            'hm': hm,
-            'reg' : reg,
-            'reg_mask': reg_mask,
-            'ind': ind,
-            'dep': dep, 
-            'dim': dim, 
-            'rot':rot,
-            'wh' :wh,
-            }
+    ret = {'input': img, 
+          'hm': hm,
+          'reg' : reg,
+          'reg_mask': reg_mask,
+          'ind': ind,
+          'dep': dep, 
+          'dim': dim, 
+          'rot':rot,
+          'wh' :wh,
+          }
         
     return ret
 
