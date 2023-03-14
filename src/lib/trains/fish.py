@@ -42,6 +42,7 @@ class FishLoss(torch.nn.Module):
                               batch['ind'], batch['wh']) 
     
     # rot_loss = rot_loss * 0.01
+    wh_loss = wh_loss * 0.1
 
     loss = loss + hm_loss
     loss = loss + off_loss
