@@ -38,9 +38,9 @@ def main(opt):
   # ==================  FREEZING MODEL ==================================
   print('Freezing layer')
   model_layers = {
-    'base' : [model.base,True],
-    'dla_up' : [model.dla_up,True],
-    'ida_up' : [model.ida_up,True],
+    'base' : [model.base,False],
+    'dla_up' : [model.dla_up,False],
+    'ida_up' : [model.ida_up,False],
 
     'hm' : [model.hm,True],
     'reg' : [model.reg,True],
@@ -118,6 +118,8 @@ def main(opt):
                  epoch, model, optimizer)
       with torch.no_grad():
         log_dict_val, preds = trainer.val(epoch, val_loader)
+        if opt.wandb:
+          wandb.log(log_dict_val)
       for k, v in log_dict_val.items():
         logger.scalar_summary('val_{}'.format(k), v, epoch)
         logger.write('{} {:8f} | '.format(k, v))
