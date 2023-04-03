@@ -48,6 +48,10 @@ class FishDataset(data.Dataset):
 
     # process img
     img = cv2.imread(img_path)
+    if img == None:
+      print(img_path)
+      exit()
+      
     img = self._preprocess_input(img)
     
     cts = []
