@@ -119,7 +119,7 @@ def main(opt):
       with torch.no_grad():
         log_dict_val, preds = trainer.val(epoch, val_loader)
         if opt.wandb:
-          wandb.log(log_dict_val)
+          wandb.log({'val_loss':log_dict_val['loss']})
       for k, v in log_dict_val.items():
         logger.scalar_summary('val_{}'.format(k), v, epoch)
         logger.write('{} {:8f} | '.format(k, v))
