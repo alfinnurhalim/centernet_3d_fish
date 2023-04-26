@@ -15,6 +15,8 @@ from utils.image import get_affine_transform, affine_transform
 from utils.image import gaussian_radius, draw_umich_gaussian, draw_msra_gaussian
 import pycocotools.coco as coco
 
+import random
+
 from scipy.spatial.transform import Rotation
 
 class FishDataset(data.Dataset):
@@ -112,7 +114,20 @@ class FishDataset(data.Dataset):
         
     return ret
 
+  def _aug(self,img):
+    kerner_size = [5,7,9]
+    k = kerner_size[random.randrange(3)]
+
+    img = cv2.GaussianBlur(img, (k, k), 0)
+    return img
+
   def _preprocess_input(self,img):
+
+    aug = random.choice([True, False])
+
+    if aug:
+      img = self._aug(img)
+
     inp = (img.astype(np.float32) / 255.)
     inp = (inp - self.mean) / self.std
     inp = inp.transpose(2, 0, 1)
