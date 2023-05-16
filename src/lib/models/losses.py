@@ -246,3 +246,18 @@ def compute_rot_loss(output, target_bin, target_res, mask):
           valid_output2[:, 7], torch.cos(valid_target_res2[:, 1]))
         loss_res += loss_sin2 + loss_cos2
     return loss_bin1 + loss_bin2 + loss_res
+
+class ReIdLoss(nn.Module):
+  def __init__(self):
+    super(ReIdLoss, self).__init__()
+    self.crit = nn.CrossEntropyLoss(ignore_index=-1)
+  
+  def forward(self, output, mask, ind, target, classifier):
+    pred = _transpose_and_gather_feat(output, ind)
+    mask_pred = mask.unsqueeze(2).expand_as(pred).float()
+
+    pred = classifier(pred*mask_pred)
+    mask_target = mask.unsqueeze(2).expand_as(pred).float()
+
+    loss = self.crit(pred,target*mask_target)
+    return loss

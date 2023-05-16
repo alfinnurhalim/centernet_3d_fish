@@ -228,6 +228,12 @@ class opts(object):
     self.parser.add_argument('--eval_oracle_dep', action='store_true', 
                              help='use ground truth depth.')
 
+    # tracking
+    self.parser.add_argument('--reid', type=int, default=128,
+                             help='reid embedding fetaure')
+    self.parser.add_argument('--max_id', type=int, default=41,
+                             help='max number ids., 0 is for background')
+
   def parse(self, args=''):
     if args == '':
       opt = self.parser.parse_args()
@@ -336,7 +342,7 @@ class opts(object):
     elif opt.task == 'fish':
       # assert opt.dataset in ['gta', 'kitti', 'viper']
       # {'hm': opt.num_classes, 'dep': 1, 'rot': 2, 'dim': 3,'reg': 2}
-      opt.heads = {'hm': opt.num_classes,'reg': 2, 'dep': 1, 'dim': 3, 'rot': 4, 'wh':2}
+      opt.heads = {'hm': opt.num_classes,'reg': 2, 'dep': 1, 'dim': 3, 'rot': 4, 'wh':2, 'reid':opt.reid}
 
     else:
       assert 0, 'task not defined!'
