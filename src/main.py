@@ -50,6 +50,8 @@ def main(opt):
     'rot' : [model.rot,True],
 
     'wh' : [model.wh,True],
+
+    'reid': [model.reid,True]
   }
 
   for key in model_layers.keys():
