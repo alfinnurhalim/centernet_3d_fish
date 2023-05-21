@@ -11,7 +11,39 @@ from __future__ import print_function
 
 import numpy as np
 import cv2
+import torch
 import random
+
+from torchvision.ops import box_iou
+
+def get_iou(gt,pred,prev_shape,iou_thresh=0.5):
+    ground_truth_bbox = torch.tensor(gt, dtype=torch.float)
+    prediction_bbox = torch.tensor(pred, dtype=torch.float)
+
+    # Get iou.
+    iou = box_iou(ground_truth_bbox, prediction_bbox)
+    iou = iou.numpy()
+    
+    results = np.empty(iou.shape[0], dtype=bool)
+    for i in range(iou.shape[0]):
+        max_value = np.max(iou[i])
+        results[i] = max_value > iou_thresh
+    
+    true_indices = np.where(results)[0]
+    false_indices = np.where(~results)[0]
+    
+    diff = len(true_indices) - prev_shape
+    if diff > 0:
+        for i in range(diff):
+            min_idx = np.argmin(np.max(iou[true_indices],axis=1))
+            false_indices = np.append(false_indices,true_indices[min_idx])
+            true_indices = np.delete(true_indices, min_idx)
+            
+    false_indices = sorted(false_indices)
+    true_indices = sorted(true_indices)
+    
+    
+    return true_indices,false_indices
 
 def flip(img):
   return img[:, :, ::-1].copy()  

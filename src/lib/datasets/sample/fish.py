@@ -127,10 +127,10 @@ class FishDataset(data.Dataset):
 
   def _preprocess_input(self,img):
 
-    aug = random.choice([True, False])
+    # aug = random.choice([True, False])
 
-    if aug:
-      img = self._aug(img)
+    # if aug:
+    #   img = self._aug(img)
 
     inp = (img.astype(np.float32) / 255.)
     inp = (inp - self.mean) / self.std
