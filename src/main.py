@@ -38,20 +38,20 @@ def main(opt):
   # ==================  FREEZING MODEL ==================================
   print('Freezing layer')
   model_layers = {
-    'base' : [model.base,True],
-    'dla_up' : [model.dla_up,True],
-    'ida_up' : [model.ida_up,True],
+    'base' : [model.base,False],
+    'dla_up' : [model.dla_up,False],
+    'ida_up' : [model.ida_up,False],
 
-    'hm' : [model.hm,True],
-    'reg' : [model.reg,True],
+    'hm' : [model.hm,False],
+    'reg' : [model.reg,False],
 
-    'dep' : [model.dep,True],
-    'dim' : [model.dim,True],
+    'dep' : [model.dep,False],
+    'dim' : [model.dim,False],
     'rot' : [model.rot,True],
 
-    'wh' : [model.wh,True],
+    'wh' : [model.wh,False],
 
-    'reid': [model.reid,True]
+    'reid': [model.reid,False]
   }
 
   for key in model_layers.keys():
