@@ -54,11 +54,11 @@ def main(opt):
     'reid': [model.reid,False]
   }
 
-  for key in model_layers.keys():
-    for name,param in model_layers[key][0].named_parameters():
-      param.requires_grad = model_layers[key][1]
-      print(key,name,param.requires_grad)
-    print('')
+  # for key in model_layers.keys():
+  #   for name,param in model_layers[key][0].named_parameters():
+  #     param.requires_grad = model_layers[key][1]
+  #     print(key,name,param.requires_grad)
+  #   print('')
   # ==================  OPTIM INFO ==================================
   optim =opt.optim
 
