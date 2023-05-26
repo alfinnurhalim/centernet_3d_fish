@@ -37,22 +37,22 @@ def main(opt):
 
   # ==================  FREEZING MODEL ==================================
   print('Freezing layer')
-  model_layers = {
-    'base' : [model.base,False],
-    'dla_up' : [model.dla_up,False],
-    'ida_up' : [model.ida_up,False],
+  # model_layers = {
+  #   'base' : [model.base,False],
+  #   'dla_up' : [model.dla_up,False],
+  #   'ida_up' : [model.ida_up,False],
 
-    'hm' : [model.hm,False],
-    'reg' : [model.reg,False],
+  #   'hm' : [model.hm,False],
+  #   'reg' : [model.reg,False],
 
-    'dep' : [model.dep,False],
-    'dim' : [model.dim,False],
-    'rot' : [model.rot,True],
+  #   'dep' : [model.dep,False],
+  #   'dim' : [model.dim,False],
+  #   'rot' : [model.rot,True],
 
-    'wh' : [model.wh,False],
+  #   'wh' : [model.wh,False],
 
-    'reid': [model.reid,False]
-  }
+  #   'reid': [model.reid,False]
+  # }
 
   # for key in model_layers.keys():
   #   for name,param in model_layers[key][0].named_parameters():
