@@ -49,9 +49,9 @@ def main(opt):
     'dim' : [model.dim,True],
     'rot' : [model.rot,True],
 
-    'wh' : [model.wh,True],
+    # 'wh' : [model.wh,True],
 
-    'reid': [model.reid,True]
+    # 'reid': [model.reid,True]
   }
 
   for key in model_layers.keys():
