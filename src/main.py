@@ -38,9 +38,9 @@ def main(opt):
   # ==================  FREEZING MODEL ==================================
   print('Freezing layer')
   model_layers = {
-    'base' : [model.base,False],
-    'dla_up' : [model.dla_up,False],
-    'ida_up' : [model.ida_up,False],
+    'base' : [model.base,True],
+    'dla_up' : [model.dla_up,True],
+    'ida_up' : [model.ida_up,True],
 
     'hm' : [model.hm,True],
     'reg' : [model.reg,True],
