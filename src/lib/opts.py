@@ -342,7 +342,7 @@ class opts(object):
     elif opt.task == 'fish':
       # assert opt.dataset in ['gta', 'kitti', 'viper']
       # {'hm': opt.num_classes, 'dep': 1, 'rot': 2, 'dim': 3,'reg': 2}
-      opt.heads = {'hm': opt.num_classes,'reg': 2, 'dep': 1, 'dim': 3, 'rot': 2}
+      opt.heads = {'hm': opt.num_classes,'reg': 2, 'dep': 1, 'dim': 3, 'rot': 2,'reid':opt.reid}
 
     else:
       assert 0, 'task not defined!'

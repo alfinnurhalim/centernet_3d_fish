@@ -461,7 +461,7 @@ def ddd_decode(heat, rot, depth, dim, wh=None, reg=None, K=40):
       
     return detections
 
-def fish_decode(heat,reg,depth,dim,rot,wh,reid,K=40):
+def fish_decode(heat,reg,depth,dim,rot,K=40):
     batch, cat, height, width = heat.size()
     heat = _nms(heat)
       
@@ -483,13 +483,13 @@ def fish_decode(heat,reg,depth,dim,rot,wh,reid,K=40):
     dim = dim.view(batch, K, 3)
 
     rot = _transpose_and_gather_feat(rot, inds)
-    rot = rot.view(batch, K, 4)
+    rot = rot.view(batch, K, 2)
 
-    wh = _transpose_and_gather_feat(wh, inds)
-    wh = wh.view(batch, K, 2)
+    # wh = _transpose_and_gather_feat(wh, inds)
+    # wh = wh.view(batch, K, 2)
 
-    reid = _transpose_and_gather_feat(reid, inds)
-    reid = reid.view(batch, K, 128)
+    # reid = _transpose_and_gather_feat(reid, inds)
+    # reid = reid.view(batch, K, 128)
 
     dets = {'cx':xs.detach().cpu().numpy()[0],
             'cy'    : ys.detach().cpu().numpy()[0],
@@ -500,9 +500,9 @@ def fish_decode(heat,reg,depth,dim,rot,wh,reid,K=40):
             'dim'   : dim.detach().cpu().numpy()[0],
             'rot'   : rot.detach().cpu().numpy()[0],
 
-            'wh'   : wh.detach().cpu().numpy()[0],
+            # 'wh'   : wh.detach().cpu().numpy()[0],
 
-            'reid' : reid.detach().cpu().numpy()[0],
+            # 'reid' : reid.detach().cpu().numpy()[0],
             }
 
 

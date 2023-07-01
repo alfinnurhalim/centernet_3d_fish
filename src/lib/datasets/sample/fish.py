@@ -44,7 +44,7 @@ class FishDataset(data.Dataset):
 
     wh = np.zeros((self.max_objs, 2), dtype=np.float32)
 
-    # reid = np.zeros((self.max_objs, self.opt.max_id), dtype=np.float32)
+    reid = np.zeros((self.max_objs, self.opt.max_id), dtype=np.float32)
 
     reg_mask = np.zeros((self.max_objs), dtype=np.uint8)
     ind = np.zeros((self.max_objs), dtype=np.int64)
@@ -96,7 +96,7 @@ class FishDataset(data.Dataset):
         dim[k] = ann['dim']
         rot[k] = angle
 
-        # reid[k][ann['fish_id']+1] = 1
+        reid[k][ann['fish_id']+1] = 1
 
         wh[k] = [w,h]
 
@@ -114,7 +114,7 @@ class FishDataset(data.Dataset):
           'dim': dim, 
           'rot':rot,
           # 'wh' :wh,
-          # 'reid':reid,
+          'reid':reid,
           }
         
     return ret
