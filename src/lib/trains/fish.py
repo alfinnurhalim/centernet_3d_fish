@@ -50,7 +50,7 @@ class FishLoss(torch.nn.Module):
     reid_loss = self.crit_class(output['reid'], batch['reg_mask'],
                               batch['ind'], batch['reid'],self.classifier) 
     
-    # rot_loss = rot_loss * 0.1
+    rot_loss = rot_loss * 0.01
     # wh_loss = wh_loss * 0.1
 
     loss = loss + hm_loss
