@@ -9,12 +9,87 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import pandas as pd
 import numpy as np
 import cv2
 import torch
 import random
 
 from torchvision.ops import box_iou
+from scipy.spatial.transform import Rotation
+from numpy.linalg import inv
+
+def read_calib(path):
+    with open(path, 'r') as f:
+        lines = f.readlines()
+        P2 = np.array(lines[2].strip().split(' ')[1:], dtype=np.float32).reshape(3, 4)
+        
+    return P2
+
+def decode_label(det):
+    scores = det['conf'][0]
+
+    down_ratio = 4
+    cx = int(det['cx'] * down_ratio)
+    cy = int(det['cy'] * down_ratio)
+
+    dim = list(det['dim'])
+    depth = det['dep'][0]
+
+    rot = list(det['rot'])
+
+    reid = det['reid'].reshape((1,-1))
+
+    merged = list()
+    merged += dim
+
+    merged.append(depth)
+
+    merged += rot
+
+    merged.append(scores)
+    merged.append(0)
+    merged.append(cx)
+    merged.append(cy)
+
+    merged_label = pd.DataFrame([merged],columns=['h','w','l','z','alphax','alphay','conf','idx','cx','cy'])
+    label = merged_label.iloc[0]
+
+    return label
+
+def get_2d_from_3d(P,det,ratio = 2):
+    img_input_size = (512,512)
+
+    label = decode_label(det)
+
+    center = (int(label['cx']),int(label['cy']))
+    x,y,z = get_xy(label,center,P)
+
+    ry = get_ry(img_input_size[0],label,P)
+    rx = get_rx(img_input_size[1],label,P)
+    rz = 0
+
+    cor = get_corners(label,rx,ry,rz,x=x,y=y,z=z)
+
+    pts = project_3d(P,cor)
+
+    xs = [p[0] for p in pts]
+    ys = [p[1] for p in pts]
+
+    xmin = int(min(xs))
+    ymin = int(min(ys))
+    xmax = int(max(xs))
+    ymax = int(max(ys))
+
+    h = abs(ymax-ymin)*ratio
+    w = abs(xmax-xmin)*ratio
+
+    xmin = int(xmin - w/2)
+    ymin = int(ymin - h/2)
+    xmax = int(xmax + w/2)
+    ymax = int(ymax + h/2)
+
+    return [xmin,ymin,xmax,ymax]
 
 def get_iou(gt,pred,prev_shape,iou_thresh=0.5):
     ground_truth_bbox = torch.tensor(gt, dtype=torch.float)
@@ -44,6 +119,85 @@ def get_iou(gt,pred,prev_shape,iou_thresh=0.5):
     
     
     return true_indices,false_indices
+
+def get_corners(data,rx=0,ry=0,rz=0,x=None,y=None,z=None):
+    
+    x = data['x'] if x == None else x
+    y = data['y'] if y == None else y
+    z = data['z'] if z == None else z
+
+    R = Rotation.from_euler('zxy', [rz,rx,ry], degrees=False).as_matrix()
+    
+    l = float(data['l'])
+    w = float(data['w'])
+    h = float(data['h'])
+    
+    x_corners = [l / 2, l / 2, -l / 2, -l / 2, l / 2, l / 2, -l / 2, -l / 2]
+    y_corners = [h/2,h/2,h/2,h/2,-h/2,-h/2,-h/2,-h/2]
+    z_corners = [w / 2, -w / 2, -w / 2, w / 2, w / 2, -w / 2, -w / 2, w / 2]
+    
+    corners = np.dot(R,np.vstack([x_corners, y_corners, z_corners]))
+
+
+#     translate from origin 
+    corners[0,:] = corners[0,:] + x
+    corners[1,:] = corners[1,:] + y
+    corners[2,:] = corners[2,:] + z
+
+    return corners
+
+def project_3d(P,corner):
+    conn = np.concatenate((corner.T, np.ones((8, 1))), axis=1)
+    corners_img_before = np.matmul(conn, P.T)
+    corners_img = corners_img_before[:, :2] / corners_img_before[:, 2][:, None]
+    
+    return corners_img
+
+def get_ry(img_size,t,P):
+    return (calc_theta_ray_center(img_size,t['cx'],P) + t['alphax'])
+
+def get_rx(img_size,t,P):
+    return -(calc_theta_ray_center(img_size,t['cy'],P,is_y=True) + t['alphay']) * -1
+
+def get_xy(ann,center,P,c=0):
+    
+    center = np.array(center).reshape((1,2))
+    depth = np.array(ann['z']).reshape(1,1)
+
+    return imagetocamera(center,depth,P)
+
+def calc_theta_ray_center(width, center, proj_matrix,is_y=False):
+    fovx = 2 * np.arctan(width / (2 * proj_matrix[0][0]))
+    
+    center = width - center if is_y else center
+    
+    dx = center - (width / 2)
+
+    mult = 1
+    if dx < 0:
+        mult = -1
+    dx = abs(dx)
+    angle = np.arctan( (2*dx*np.tan(fovx/2)) / width )
+    angle = angle * mult
+
+    angle = fovx/2 - angle
+    return angle
+
+def imagetocamera(points, depth, projection):
+    """
+    points: (N, 2), N points on X-Y image plane
+    depths: (N,), N depth values for points
+    projection: (3, 4), projection matrix
+    corners: (N, 3), N points on X(right)-Y(down)-Z(front) camera coordinate
+    """
+    assert points.shape[1] == 2, "Shape ({}) not fit".format(points.shape)
+
+    corners = np.hstack([points, np.ones(
+        (points.shape[0], 1))]).dot(inv(projection[:, 0:3]).T)
+    assert np.allclose(corners[:, 2], 1)
+    corners *= depth.reshape(-1, 1)
+
+    return list(corners[0])
 
 def flip(img):
   return img[:, :, ::-1].copy()  
