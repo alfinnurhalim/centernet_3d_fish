@@ -44,8 +44,8 @@ class FishLoss(torch.nn.Module):
     rot_loss = self.crit_reg(output['rot'], batch['reg_mask'],
                               batch['ind'], batch['rot'])
 
-    wh_loss = self.crit_reg(output['wh'], batch['reg_mask'],
-                              batch['ind'], batch['wh']) 
+    # wh_loss = self.crit_reg(output['wh'], batch['reg_mask'],
+    #                           batch['ind'], batch['wh']) 
 
     # reid_loss = self.crit_class(output['reid'], batch['reg_mask'],
     #                           batch['ind'], batch['reid'],self.classifier) 
@@ -62,7 +62,7 @@ class FishLoss(torch.nn.Module):
 
     # loss = loss + wh_loss 
 
-    loss = loss + reid_loss
+    # loss = loss + reid_loss
 
     loss_stats = {'loss': loss,
                   'hm_loss': hm_loss,
@@ -70,7 +70,7 @@ class FishLoss(torch.nn.Module):
                   'dep_loss': dep_loss, 
                   'dim_loss': dim_loss,
                   'rot_loss': rot_loss,
-                  'wh_loss' : wh_loss,
+                  # 'wh_loss' : wh_loss,
                   # 'reid_loss' : reid_loss
                  }
 
@@ -87,7 +87,7 @@ class FishTrainer(BaseTrainer):
                   'dep_loss',
                   'dim_loss',
                   'rot_loss',
-                  'wh_loss',
+                  # 'wh_loss',
                   # 'reid_loss'
                   ]
 

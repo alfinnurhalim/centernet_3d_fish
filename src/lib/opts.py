@@ -109,7 +109,7 @@ class opts(object):
                              help='multi scale test augmentation.')
     self.parser.add_argument('--nms', action='store_true',
                              help='run nms in testing.')
-    self.parser.add_argument('--K', type=int, default=100,
+    self.parser.add_argument('--K', type=int, default=300,
                              help='max number of output objects.') 
     self.parser.add_argument('--not_prefetch_test', action='store_true',
                              help='not use parallal data pre-processing.')
@@ -342,7 +342,7 @@ class opts(object):
     elif opt.task == 'fish':
       # assert opt.dataset in ['gta', 'kitti', 'viper']
       # {'hm': opt.num_classes, 'dep': 1, 'rot': 2, 'dim': 3,'reg': 2}
-      opt.heads = {'hm': opt.num_classes,'reg': 2, 'dep': 1, 'dim': 3, 'rot': 2,'wh':2}
+      opt.heads = {'hm': opt.num_classes,'reg': 2, 'dep': 1, 'dim': 3, 'rot': 2}
 
     else:
       assert 0, 'task not defined!'

@@ -33,7 +33,7 @@ class Fish(data.Dataset):
     else:
       self.annot_path = os.path.join(self.data_dir, 
         'annotations', 'kitti_{}_{}.json').format(opt.kitti_split, split)
-    self.max_objs = 100
+    self.max_objs = 300
     self.class_name = [
       '__background__', 'Pedestrian', 'Car', 'Cyclist']
     self.cat_ids = {1:0, 2:1, 3:2, 4:-3, 5:-3, 6:-2, 7:-99, 8:-99, 9:-1}
