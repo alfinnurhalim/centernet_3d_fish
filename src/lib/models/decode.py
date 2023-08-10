@@ -464,7 +464,7 @@ def ddd_decode(heat, rot, depth, dim, wh=None, reg=None, K=40):
 def fish_decode(heat,reg,depth,dim,rot,K=300):
     batch, cat, height, width = heat.size()
     heat = _nms(heat)
-      
+    
     scores, inds, clses, ys, xs = _topk(heat, K=K)
 
     reg = _transpose_and_gather_feat(reg, inds)
