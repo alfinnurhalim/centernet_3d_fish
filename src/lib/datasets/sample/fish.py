@@ -57,6 +57,7 @@ class FishDataset(data.Dataset):
     cts = []
     for k in range(len(boxes)):
       ann = img_annos[k]
+      dim_avg = np.array([0.1457903,0.06654171,0.3345097])
 
       bbox = self._preprocess_bbox(boxes[k])
 
@@ -94,7 +95,7 @@ class FishDataset(data.Dataset):
         angle = np.array([alphaX,alphaY])
 
         dep[k] = ann['depth']
-        dim[k] = ann['dim']
+        dim[k] = ann['dim'] - dim_avg
         rot[k] = angle
 
         # reid[k][ann['fish_id']+1] = 1
