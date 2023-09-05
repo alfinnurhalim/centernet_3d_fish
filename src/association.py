@@ -54,6 +54,9 @@ def match(centernet_df,YOLO_df):
 		centernet_data = centernet_df[centernet_df['idx']==idx]
 		yolo_data = YOLO_df[YOLO_df['idx']==idx]
 
+		if len(centernet_data) == 0 or len(yolo_data)==0:
+			return pd.DataFrame(columns=inf_header)
+			
 		data = associate(centernet_data,yolo_data)
 
 		if df is None:
@@ -61,8 +64,9 @@ def match(centernet_df,YOLO_df):
 		else:
 			df = pd.concat([df,data])
 	
+	df = pd.DataFrame(columns=inf_header) if df is None else df
 	df_input = df.copy()
-	df_output = []
+	df_output = pd.DataFrame(columns=inf_header)
 
 	angle_columns = ['alphax','alphay']
 	smooth_columns = ['alphax', 'alphay','w','h','l','z']

@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import numpy as np
 import torch
 import torch.nn as nn
 from .utils import _gather_feat, _transpose_and_gather_feat
@@ -462,6 +463,7 @@ def ddd_decode(heat, rot, depth, dim, wh=None, reg=None, K=40):
     return detections
 
 def fish_decode(heat,reg,depth,dim,rot,K=300):
+    dim_avg = np.array([0.1457903,0.06654171,0.3345097])
     batch, cat, height, width = heat.size()
     heat = _nms(heat)
     
@@ -497,7 +499,7 @@ def fish_decode(heat,reg,depth,dim,rot,K=300):
             'class' : clses.detach().cpu().numpy()[0],
 
             'dep'   : depth.detach().cpu().numpy()[0],
-            'dim'   : dim.detach().cpu().numpy()[0],
+            'dim'   : dim.detach().cpu().numpy()[0] + dim_avg,
             'rot'   : rot.detach().cpu().numpy()[0],
 
             # 'wh'   : wh.detach().cpu().numpy()[0],

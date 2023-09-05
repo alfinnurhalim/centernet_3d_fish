@@ -24,7 +24,7 @@ def convert_video(input_path, output_folder, max_images):
     frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
     # Determine the number of frames to process
-    num_frames_to_process = min(frame_count, max_images)
+    num_frames_to_process = min(frame_count, max_images) if max_images > 0 else frame_count
 
     for frame_number in range(num_frames_to_process):
         ret, frame = cap.read()

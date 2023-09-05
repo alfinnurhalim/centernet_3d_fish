@@ -9,7 +9,7 @@ from ultralytics import YOLO
 from tqdm import trange,tqdm
 from shutil import rmtree
 
-weight_path = '/home/alfin/Documents/deep_learning/YOLOv8/model/best.pt'
+weight_path = '../models/YOLO_redsnapper.pt'
 model = YOLO(weight_path)
 
 def save_result(df,img_dirs):
@@ -32,7 +32,7 @@ def forward(img_dirs,max_img=50):
 	out = list()
 	for idx,img_path in enumerate(tqdm(imgs)):
 		img_ori = cv2.imread(os.path.join(img_dirs,img_path))
-		img_ori = cv2.resize(img_ori,(512,512))
+		img_ori = cv2.resize(img_ori,(480,640))
 
 		for box_idx in range(len(results[idx].boxes)):
 			data = []
