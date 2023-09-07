@@ -478,14 +478,14 @@ def fish_decode(heat,reg,depth,dim,rot,K=300):
     xs = xs.view(batch, K, 1) + reg[:, :, 0:1]
     ys = ys.view(batch, K, 1) + reg[:, :, 1:2]
 
-    depth = _transpose_and_gather_feat(depth, inds)
-    depth = depth.view(batch, K, 1)
+    # depth = _transpose_and_gather_feat(depth, inds)
+    # depth = depth.view(batch, K, 1)
 
-    dim = _transpose_and_gather_feat(dim, inds)
-    dim = dim.view(batch, K, 3)
+    # dim = _transpose_and_gather_feat(dim, inds)
+    # dim = dim.view(batch, K, 3)
 
-    rot = _transpose_and_gather_feat(rot, inds)
-    rot = rot.view(batch, K, 2)
+    # rot = _transpose_and_gather_feat(rot, inds)
+    # rot = rot.view(batch, K, 2)
 
     # wh = _transpose_and_gather_feat(wh, inds)
     # wh = wh.view(batch, K, 2)
@@ -498,9 +498,9 @@ def fish_decode(heat,reg,depth,dim,rot,K=300):
             'conf'  : scores.detach().cpu().numpy()[0],
             'class' : clses.detach().cpu().numpy()[0],
 
-            'dep'   : depth.detach().cpu().numpy()[0],
-            'dim'   : dim.detach().cpu().numpy()[0] + dim_avg,
-            'rot'   : rot.detach().cpu().numpy()[0],
+            # 'dep'   : depth.detach().cpu().numpy()[0],
+            # 'dim'   : dim.detach().cpu().numpy()[0] + dim_avg,
+            # 'rot'   : rot.detach().cpu().numpy()[0],
 
             # 'wh'   : wh.detach().cpu().numpy()[0],
 

@@ -45,9 +45,9 @@ def main(opt):
     'hm' : [model.hm,True],
     'reg' : [model.reg,True],
 
-    'dep' : [model.dep,True],
-    'dim' : [model.dim,True],
-    'rot' : [model.rot,True],
+    # 'dep' : [model.dep,True],
+    # 'dim' : [model.dim,True],
+    # 'rot' : [model.rot,True],
 
     # 'wh' : [model.wh,True],
 
