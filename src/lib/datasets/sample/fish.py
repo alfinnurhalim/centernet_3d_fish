@@ -70,8 +70,8 @@ class FishDataset(data.Dataset):
       if h > 0 and w > 0:
 
         # HEATMAP AND CENTER  
-        cx_3d = float(ann['cx'])/opt.down_ratio
-        cy_3d = float(ann['cy'])/opt.down_ratio
+        cx_3d = float(ann['cx'])/self.opt.down_ratio
+        cy_3d = float(ann['cy'])/self.opt.down_ratio
 
         cx_2d = bbox[0] + w/2
         cy_2d = bbox[1] + h/2
