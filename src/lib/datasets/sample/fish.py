@@ -70,15 +70,14 @@ class FishDataset(data.Dataset):
       if h > 0 and w > 0:
 
         # HEATMAP AND CENTER  
-        cx_3d = float(ann['cx'])
-        cy_3d = float(ann['cy'])
+        cx_3d = float(ann['cx'])/opt.down_ratio
+        cy_3d = float(ann['cy'])/opt.down_ratio
 
         cx_2d = bbox[0] + w/2
         cy_2d = bbox[1] + h/2
 
-        print('debuggggggg',cx_3d,cy_3d,cx_2d,cy_2d)
         ct = np.array(
-          [cx_2d,cy_2d], dtype=np.float32)
+          [cx_3d,cy_3d], dtype=np.float32)
         ct_int = ct.astype(np.int32)
 
         cts.append(ct_int)
