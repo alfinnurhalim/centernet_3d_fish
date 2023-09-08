@@ -37,12 +37,12 @@ class FishLoss(torch.nn.Module):
     off_loss = self.crit_reg(output['reg'], batch['reg_mask'],
                             batch['ind'], batch['reg'])
 
-    # dep_loss = self.crit_reg(output['dep'], batch['reg_mask'],
-    #                           batch['ind'], batch['dep'])
-    # dim_loss = self.crit_reg(output['dim'], batch['reg_mask'],
-    #                           batch['ind'], batch['dim'])
-    # rot_loss = self.crit_reg(output['rot'], batch['reg_mask'],
-    #                           batch['ind'], batch['rot'])
+    dep_loss = self.crit_reg(output['dep'], batch['reg_mask'],
+                              batch['ind'], batch['dep'])
+    dim_loss = self.crit_reg(output['dim'], batch['reg_mask'],
+                              batch['ind'], batch['dim'])
+    rot_loss = self.crit_reg(output['rot'], batch['reg_mask'],
+                              batch['ind'], batch['rot'])
 
     # wh_loss = self.crit_reg(output['wh'], batch['reg_mask'],
     #                           batch['ind'], batch['wh']) 
@@ -50,15 +50,15 @@ class FishLoss(torch.nn.Module):
     # reid_loss = self.crit_class(output['reid'], batch['reg_mask'],
     #                           batch['ind'], batch['reid'],self.classifier) 
     
-    # rot_loss = rot_loss * 0.01
+    rot_loss = rot_loss * 0.01
     # wh_loss = wh_loss * 0.1
 
     loss = loss + hm_loss
     loss = loss + off_loss
 
-    # loss = loss + dep_loss
-    # loss = loss + dim_loss
-    # loss = loss + rot_loss
+    loss = loss + dep_loss
+    loss = loss + dim_loss
+    loss = loss + rot_loss
 
     # loss = loss + wh_loss 
 
@@ -67,9 +67,9 @@ class FishLoss(torch.nn.Module):
     loss_stats = {'loss': loss,
                   'hm_loss': hm_loss,
                   'off_loss': off_loss,
-                  # 'dep_loss': dep_loss, 
-                  # 'dim_loss': dim_loss,
-                  # 'rot_loss': rot_loss,
+                  'dep_loss': dep_loss, 
+                  'dim_loss': dim_loss,
+                  'rot_loss': rot_loss,
                   # 'wh_loss' : wh_loss,
                   # 'reid_loss' : reid_loss
                  }
@@ -84,9 +84,9 @@ class FishTrainer(BaseTrainer):
     loss_states = ['loss', 
                   'hm_loss', 
                   'off_loss',
-                  # 'dep_loss',
-                  # 'dim_loss',
-                  # 'rot_loss',
+                  'dep_loss',
+                  'dim_loss',
+                  'rot_loss',
                   # 'wh_loss',
                   # 'reid_loss'
                   ]
