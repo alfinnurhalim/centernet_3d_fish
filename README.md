@@ -3,6 +3,8 @@
 
 A complete pipeline of Object detection, 3D detection, size estimation for fish using Computer Vision and Machin elearning. The goal of this project is to use machine learning and computer vision techniques to estimate fish sizes in 3D from monocular video footage
 
+![Pipeline](https://github.com/alfinnurhalim/centernet_3d_fish/blob/master/readme/Pipeline.png)
+
 ## Updates
 
  - (June, 2020) We released a state-of-the-art Lidar-based 3D detection and tracking framework [CenterPoint](https://github.com/tianweiy/CenterPoint).
